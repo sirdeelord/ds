@@ -1,0 +1,269 @@
+
+Given an integer array nums sorted in non-decreasing order, 
+return an array of the squares of each number sorted in 
+non-decreasing order.
+
+Input: nums = [-4,-1,0,3,10]
+Output: [0,1,9,16,100]
+Explanation: After squaring, the array becomes [16,1,0,9,100].
+After sorting, it becomes [0,1,9,16,100].
+
+Solution
+public static int[] SortedSquares(int[] nums) 
+{
+    int[] result = new int[nums.Length];
+    int left = 0;
+    int right = nums.Length - 1;
+    int index = nums.Length - 1;
+    while (left <= right)
+    {
+        if (Math.Abs(nums[left]) > Math.Abs(nums[right]))
+        {
+            result[index] = nums[left] * nums[left];
+            left++;
+        }
+        else
+        {
+            result[index] = nums[right] * nums[right];
+            right--;
+        }
+        index--;
+    }
+    return result;
+}
+
+
+
+
+
+/*
+* Complete the 'diagonalDifference' function below.
+*
+* The function is expected to return an INTEGER.
+* The function accepts 2D_INTEGER_ARRAY arr as parameter.
+*/
+
+public static int diagonalDifference(List<List<int>> arr)
+{
+    int leftToRight = 0;
+    int rightToLeft = 0;
+
+    for (int i = 0; i < arr.Count; i++)
+    {
+        leftToRight += arr[i][i];
+        rightToLeft += arr[i][arr[i].Count - 1 - i];
+    }
+    return Math.Abs(leftToRight - rightToLeft);
+}
+
+public int FindNumbers(int[] nums) 
+{
+    int count = 0;
+    for (int i = 0; i < nums.Length; i++)
+    {
+        int temp = nums[i];
+        int tempCount = 0;
+        while (temp > 0)
+        {
+            tempCount++;
+            temp /= 10;
+        }
+        if (tempCount % 2 == 0)
+        {
+            count++;
+        }
+    }
+    return count;
+}
+
+
+
+class find_numbers
+{
+    public static void main(String args[])
+    {
+        int[] a = {123 , 34 , 3434 , 121 , 100};
+        Console.WriteLine(findNumbers(a));
+    }
+    static int numberOfDigits(int n)
+    {
+        int cnt = 0;
+        while(n > 0)
+        {
+            n /= 10;
+            cnt++;
+        }
+        return cnt;
+    }
+    static int findNumbers(int[] a)
+    {
+        int result = 0;
+        for(int i = 0 ; i < a.Length ; i++)
+            if(numberOfDigits(a[i]) % 2 == 0)
+                result++;
+        return result;
+    }
+}
+
+
+
+
+//given the length of a rod and a list of prices for different 
+//pieces of rod, find the maximum value of the rod return the 
+//maximum revenue achievable by cutting the rod into pieces
+static int rodCut(int L, int[] price)
+{
+    int[] table = new int[L+1];
+    table[0] = 0;
+    for(int i = 1; i <= L; i++)
+    {
+        int max = 0;
+        for(int j = 0; j < i; j++)
+        {
+            int revenue = price[j] + table[i-j-1];
+            if(revenue > max)
+            {
+                max = revenue;
+            }
+        }
+        table[i] = max;
+    }
+    return table[L];
+}
+
+
+//Given a 2D grid with n rows and m colums, count 
+//the number of unique paths starting at the top 
+//left corner and ending at the bottom right corner. 
+//All moves must be either down or right.
+static int uniquePaths(int m, int n)
+{
+    int[,] grid = new int[m,n];
+    grid[0,0] = 1;
+    for(int i = 0; i < m; i++)
+    {
+        for(int j = 0; j < n; j++)
+        {
+            if(i == 0 && j == 0)
+            {
+                continue;
+            }
+            else if(i == 0)
+            {
+                grid[i,j] = grid[i,j-1];
+            }
+            else if(j == 0)
+            {
+                grid[i,j] = grid[i-1,j];
+            }
+            else
+            {
+                grid[i,j] = grid[i-1,j] + grid[i,j-1];
+            }
+        }
+    }
+    return grid[m-1,n-1];
+}
+
+
+// During the next Amazon summit, the Amazon robotics wants to demonstrate how easy it is to use their 
+public static bool doesCircleExist(char[] path)
+{
+    int x = 0;
+    int y = 0;
+    int direction = 0;
+    int length = path.Length;
+    for (int i = 0; i < length; i++)
+    {
+        if (path[i] == 'R')
+        {
+            direction = (direction + 1) % 4;
+        }
+        else if (path[i] == 'L')
+        {
+            direction = (direction + 3) % 4;
+        }
+        else if (path[i] == 'G')
+        {
+            if (direction == 0)
+            {
+                y++;
+            }
+            else if (direction == 1)
+            {
+                x++;
+            }
+            else if (direction == 2)
+            {
+                y--;
+            }
+            else if (direction == 3)
+            {
+                x--;
+            }
+        }
+    }
+    return x == 0 && y == 0;
+}
+
+
+//Given a directed acyclic graph (DAG) of n nodes labeled from 0 to n - 1, 
+//find all possible paths from node 0 to node n - 1 and return them in any order.
+//The graph is given as follows: graph[i] is a list of all nodes you can 
+//visit from node i (i.e., there is a directed edge from node i to node graph[i][j]).
+public IList<IList<int>> AllPathsSourceTarget(int[][] graph)
+{
+    var result = new List<IList<int>>();
+    var path = new List<int>();
+    DFS(graph, 0, path, result);
+    return result;
+}
+
+private void DFS(int[][] graph, int v, List<int> path, List<IList<int>> result)
+{
+    path.Add(v);
+    if (v == graph.Length - 1)
+    {
+        result.Add(new List<int>(path));
+        return;
+    }
+    foreach (var next in graph[v])
+    {
+        DFS(graph, next, path, result);
+        path.RemoveAt(path.Count - 1);
+    }
+    
+}
+
+
+
+
+public static int GetNumberOfIslands(int[,] binaryMatrix)
+{
+    int count = 0;
+    for (int i = 0; i < binaryMatrix.GetLength(0); i++)
+    {
+        for (int j = 0; j < binaryMatrix.GetLength(1); j++)
+        {
+            if (binaryMatrix[i, j] == 1)
+            {
+                count++;
+                DFS(binaryMatrix, i, j);
+            }
+        }
+    }
+    return count;
+}
+
+private static void DFS(int[,] binaryMatrix, int i, int j)
+{
+    if (i < 0 || i >= binaryMatrix.GetLength(0) || j < 0 || j >= binaryMatrix.GetLength(1) || binaryMatrix[i, j] == 0)
+    {
+        return;
+    }
+    binaryMatrix[i, j] = 0;
+    DFS(binaryMatrix, i + 1, j);
+    DFS(binaryMatrix, i - 1, j);
+    DFS(binaryMatrix, i, j + 1);
+    DFS(binaryMatrix, i, j - 1);
+}
